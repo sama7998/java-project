@@ -1,0 +1,25 @@
+properties([pipelineTriggers([githubPush()])]) 
+
+node('linux'){
+
+   stage('Unit Tests'){
+        sh "ant -f test.xml -v"
+    }
+    stage('Build'){
+        git 'https://github.com/sama7998/java-project.git'
+        sh "ant -f build.xml -v"
+	
+      	junit 'reports/result.xml'
+    }
+    
+    
+
+    stage("Deploy"){
+	    sh "aws s3 cp /workspace/java-pipeline/dist/rectangle-${BUILD_NUMBER}.jar s3://madhu-assignment10"
+    }
+
+    stage("Report"){
+	    sh "aws cloudformation describe-stack-resources --region us-east-1 --stack-name jenkins"
+    }
+    
+}
