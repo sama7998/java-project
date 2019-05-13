@@ -3,7 +3,8 @@ properties([pipelineTriggers([githubPush()])])
 node('linux'){
 
    stage('Unit Tests'){
-        sh "ant -f test.xml -v"
+         git 'https://github.com/sama7998/java-project.git'
+         sh "ant -f test.xml -v"
     }
     stage('Build'){
         git 'https://github.com/sama7998/java-project.git'
